@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class test{
+public class Grid{
     public static void main(String[] args){
         System.out.println("insert size");
         Scanner userInput = new Scanner(System.in);
