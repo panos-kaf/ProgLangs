@@ -27,9 +27,9 @@ public class Grid{
         }
         userInput.close();
 
-        Solver solver = new Solver();
+        Solver solver = new Solver(N, grid);
 
-        int cost = solver.solve(N,grid);
+        int cost = solver.solve();
         System.out.println(cost);
     }
 }
