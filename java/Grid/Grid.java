@@ -15,9 +15,15 @@ public class Grid{
         }
         userInput.close();
         GridSolver solver = new GridSolver(N, grid);
-        List<Location> path = solver.solve();
-        for (Location loc : path){
-            System.out.print(loc.toString()+"-->");
+        List<String> path = solver.solve();
+        if(path==null){
+            System.out.println("IMPOSSIBLE");
+        }
+        else{
+        for (String loc : path){
+            System.out.print(loc + " ");
+            //System.out.print(loc.toString()+"-->");
+            }
         }
         //System.out.println(Arrays.toString(path.toArray()));
         //System.out.println(path);
