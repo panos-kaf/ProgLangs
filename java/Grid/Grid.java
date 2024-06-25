@@ -1,4 +1,4 @@
-import java.util.Scanner;
+import java.util.*;
 
 public class Grid{
     public static void main(String[] args){
@@ -15,7 +15,11 @@ public class Grid{
         }
         userInput.close();
         GridSolver solver = new GridSolver(N, grid);
-        int cost = solver.solve();
-        System.out.println(cost);
+        List<Location> path = solver.solve();
+        for (Location loc : path){
+            System.out.print(loc.toString()+"-->");
+        }
+        //System.out.println(Arrays.toString(path.toArray()));
+        //System.out.println(path);
     }
 }

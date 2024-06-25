@@ -6,6 +6,14 @@ public class Location{
         this.x = X;
         this.y = Y;
     }
+    
+    @Override
+    public String toString(){
+        String X = String.valueOf(this.x);
+        String Y = String.valueOf(this.y);
+        return X+","+Y;
+    }
+
     @Override
     public boolean equals(Object o){
         if (this == o) return true;
