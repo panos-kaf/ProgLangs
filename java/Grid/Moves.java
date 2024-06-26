@@ -20,13 +20,6 @@ public class Moves{
             if(path==null){
                 System.out.println("IMPOSSIBLE");
             }
-            //else{
-            //    System.out.print("[");
-            //    for (String loc : path){
-            //        System.out.print(loc + ",");
-            //    }
-            //    System.out.println("]");
-            //}
             else{
                 System.out.println(Arrays.toString(path.toArray()));
             }
