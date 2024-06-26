@@ -1,10 +1,10 @@
 import java.util.*;
-public class GridSolver{
+public class MovesSolver{
     
     int N;
     int[][] Grid;
   
-    public GridSolver(int size,int[][] grid){
+    public MovesSolver(int size,int[][] grid){
         this.N = size;
         this.Grid = grid;
     }
@@ -36,13 +36,11 @@ public class GridSolver{
         while(!frontier.isEmpty()){
             loc = frontier.remove();
             int currentDistance = distance.get(loc);
-            //if (((loc.x==N-1) && (loc.y==N-1))) 
             if(loc.equals(end))
             {
                 return reconstruct(parent,directions,end);
             }    
 
-            //for(Location neighbor : Neighbors(loc.x,loc.y))
             Map<Location,String> neighbors = Neighbors(loc.x,loc.y);
             for(Location neighbor : neighbors.keySet())
             {
@@ -53,20 +51,14 @@ public class GridSolver{
                     parent.put(neighbor,loc);
                     directions.put(neighbor,dir);
                 }
-                //if(!visited.contains(neighbor))
-                //    frontier.add(neighbor);
-            }
-            
-            //System.out.print( "(" + loc.x + "," + loc.y + ")->" );
+            } 
         }
-        //System.out.println("(" + loc.x + "," + loc.y + ")");
         return null;
     } 
-
+    
     public Map<Location,String> Neighbors(int x, int y){
         Map<Location,String> res = new HashMap<>();
         int val = Grid[x][y];
-
 
         int[][] neighbors = { 
             {-1,-1}, 
@@ -92,9 +84,7 @@ public class GridSolver{
         for (int[] neighbor : neighbors){
             int xn = x + neighbor[0];
             int yn = y + neighbor[1];
-
             if(xn >=0 && yn >=0 && xn<N && yn<N && Grid[xn][yn]<val){
-                //res.add(new Location(xn,yn));
                 res.put(new Location(xn,yn),directions.get(neighbor));
             }
         }
