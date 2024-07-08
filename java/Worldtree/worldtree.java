@@ -3,10 +3,12 @@ import java.util.*;
 class Node{
     int value;
     Node left,right;
+    boolean swapped;
     Node(int val){
         this.value = val;
         this.left=null;
         this.right=null;
+        this.swapped=false;
     }
 }
 
@@ -14,23 +16,22 @@ public class Worldtree {
     
     Node root;
     int size;
-
-    public boolean isFull(Node n){
-        if(n.left!=null && n.right!=null)
-        return n.left.value==0 && n.right.value==0 || (isFull(n.left) && isFull(n.right));
-        else return false;
-    }
-
+    
     public Worldtree(int n){
         this.size=n;
         this.root = null;
     }
 
-    public void insert(int val){
-        root = insertHelper(root, val);
+    private boolean isFull(Node n){
+        if(n.left!=null && n.right!=null)
+        return n.left.value==0 && n.right.value==0 || (isFull(n.left) && isFull(n.right));
+        else return false;
     }
 
-    public Node insertHelper(Node n, int val){
+    public void insert(int val){
+        root = insert(root, val);
+    }
+    private Node insert(Node n, int val){
         if(n==null){
             n = new Node(val);
             return n;
@@ -41,14 +42,14 @@ public class Worldtree {
                 return n;
             }
             else if (n.left.value != 0 && !isFull(n.left)){
-                n.left = insertHelper(n.left,val);
+                n.left = insert(n.left,val);
             }
             else if (n.right == null){
                 n.right = new Node(val);
                 return n;
             }   
             else if (n.right.value != 0 && !isFull(n.right)){
-                n.right = insertHelper(n.right,val);
+                n.right = insert(n.right,val);
             }
 
         else{
@@ -59,26 +60,53 @@ public class Worldtree {
     }
 
     public void inorder(){
-        inorderHelper(this.root);
+        inorder(this.root);
     }
-    public void inorderHelper(Node r){
+    private void inorder(Node r){
     if(r!=null){
-        inorderHelper(r.left);
+        inorder(r.left);
             if(r.value!=0){
                 System.out.print(r.value + " ");
             }
-        inorderHelper(r.right);
+        inorder(r.right);
         }
     }   
-    public static void main(String[] args) {
 
+    private void swap(Node n){
+        Node temp = n.right;
+        n.right = n.left;
+        n.left = temp;
+        n.swapped = true;
+    }
+
+    public void solve(){
+        solve(root);
+    }
+    private void solve(Node n){
+        int smallest = this.size;
+        if(n!=null && n.value!=0){
+            solve(n.left);
+            if(((n.left.value>n.right.value && n.right.value!=0) || 
+               (n.right.value<n.value && n.left.value==0)) && !n.swapped) {
+                swap(n);
+            }
+            solve(n.right);
+        }    
+    }
+    
+    public static void main(String[] args) {
         Scanner userInput = new Scanner(System.in);
         int N = userInput.nextInt();
         Worldtree worldtree = new Worldtree(N);
-        for(int i=0;i<2*N+1;i++){
-            worldtree.insert(userInput.nextInt());
+        for(int i=0;i<N;){
+            int n = userInput.nextInt();
+            worldtree.insert(n);
+            if(n!=0) i++;
         }
         userInput.close();
+        worldtree.inorder();
+        worldtree.solve();
+        System.out.println();
         worldtree.inorder();
     }
 
