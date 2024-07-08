@@ -10,6 +10,14 @@ class Node{
         this.right=null;
         this.swapped=false;
     }
+    public boolean leaf(){
+        if (this.value==0) return false;
+        if ((this.left==null  || this.left.value==0) &&
+            (this.right==null || this.right.value==0)){
+            return true;
+        }
+        return false;
+    }
 }
 
 public class Worldtree {
@@ -76,22 +84,40 @@ public class Worldtree {
         Node temp = n.right;
         n.right = n.left;
         n.left = temp;
-        n.swapped = true;
+    }
+
+    private int smallestLeaf(Node n,int min){
+        if(n==null) return min;
+
+        if(n.leaf()){
+            if(n.value<min){
+                min = n.value;
+            }
+            return min;
+        }
+        min=smallestLeaf(n.left,min);
+        min=smallestLeaf(n.right,min);
+        return min;
     }
 
     public void solve(){
         solve(root);
+        int L=smallestLeaf(root.left,size);
+        int R=smallestLeaf(root.right,size);
+        if(L>R) swap(root);
+        System.out.println("\nleft smallest = "+ L);        
+        System.out.println("right smallest = " + R);  
     }
     private void solve(Node n){
-        int smallest = this.size;
-        if(n!=null && n.value!=0){
+        if(n.left!=null && n.value!=0){
             solve(n.left);
             if(((n.left.value>n.right.value && n.right.value!=0) || 
-               (n.right.value<n.value && n.left.value==0)) && !n.swapped) {
+               ((n.right.value<n.value && n.left.value==0))) ||
+               ((n.left.value>n.value && n.right.value==0))){
                 swap(n);
             }
             solve(n.right);
-        }    
+        }   
     }
     
     public static void main(String[] args) {
