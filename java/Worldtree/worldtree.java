@@ -1,21 +1,22 @@
 import java.util.*;
-import java.io.File;
-import java.io.FileNotFoundException;
 
 class Node{
     int value;
     Node left,right;
+
     Node(int val){
         this.value = val;
         this.left=null;
         this.right=null;
     }
+
     public boolean leaf(){
-        if (this.value==0) return false;
-        if ((this.left==null  || this.left.value==0) &&
-            (this.right==null || this.right.value==0)){
-            return true;
-        }
+        if (this.value==0) return true;
+
+        if ((this.left == null) || (this.right==null)) return false;
+
+        if ((this.left.value==0) && (this.right.value==0)) return true;
+
         return false;
     }
 }
@@ -31,11 +32,11 @@ public class Worldtree {
     }
 
     private boolean isFull(Node n){
-        if(n.left!=null && n.right!=null){
-            return n.left.value==0 && n.right.value==0 || (isFull(n.left) && isFull(n.right));
-        }
-        else return false;
-    }
+        if(n==null) return false;
+
+        if(n.leaf()) return true;
+
+        return isFull(n.left) && isFull(n.right);}
 
     public void insert(int val){
         root = insert(root, val);
@@ -45,25 +46,23 @@ public class Worldtree {
             n = new Node(val);
             return n;
         }
-        if(n.value!=0){
             if (n.left == null){
                 n.left = new Node(val);
                 return n;
             }
-            else if (n.left.value != 0 && !isFull(n.left)){
+            else if (!isFull(n.left)){
                 n.left = insert(n.left,val);
             }
             else if (n.right == null){
                 n.right = new Node(val);
                 return n;
             }   
-            else if (n.right.value != 0 && !isFull(n.right)){
+            else if (n.right.value != 0){
                 n.right = insert(n.right,val);
             }
 
         else{
             System.out.println("The Worldtree is full");
-        }
     }
         return n; 
     }
@@ -81,7 +80,7 @@ public class Worldtree {
         }
     }   
 
-    private void swap(Node n){
+    public void swap(Node n){
         Node temp = n.right;
         n.right = n.left;
         n.left = temp;
@@ -105,37 +104,31 @@ public class Worldtree {
         solve(root);
         int L=smallestLeaf(root.left,size);
         int R=smallestLeaf(root.right,size);
-        if(L>R) swap(root);
+        if(L>R || (root.left.value==0 && R<root.value) || (root.right.value==0 && L>root.value)) 
+            swap(root);
     }
     private void solve(Node n){
         if(n.left!=null && n.value!=0){
             solve(n.left);
+            solve(n.right);
             if(((n.left.value>n.right.value && n.right.value!=0) || 
                ((n.right.value<n.value && n.left.value==0))) ||
                ((n.left.value>n.value && n.right.value==0))){
                 swap(n);
             }
-            solve(n.right);
         }   
     }
     
     public static void main(String[] args){
-        try{
-            File inputFile = new File(args[0]);
-            Scanner userInput = new Scanner(inputFile);
-            int N = userInput.nextInt();
-            Worldtree worldtree = new Worldtree(N);
-            for(int i=0;i<N;){
-                int n = userInput.nextInt();
-                worldtree.insert(n);
-                if(n!=0) i++;
-            }
-            userInput.close();
-            worldtree.solve();
-            worldtree.inorder();
+        Scanner userInput = new Scanner(System.in);
+        int N = userInput.nextInt();
+        Worldtree worldtree = new Worldtree(N);
+        for(int i=0;i<2*N+1;i++){
+            int n = userInput.nextInt();
+            worldtree.insert(n);
         }
-        catch(FileNotFoundException e){
-            System.out.println("read error");
-        }
+        userInput.close();
+        worldtree.solve();
+        worldtree.inorder();
     }
 }
