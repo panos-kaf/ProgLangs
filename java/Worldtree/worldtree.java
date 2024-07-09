@@ -91,7 +91,7 @@ public class Worldtree {
     private int smallestLeaf(Node n,int min){
         if(n==null) return min;
 
-        if(n.leaf()){
+        if(n.leaf() && n.value!=0){
             if(n.value<min){
                 min = n.value;
             }
@@ -101,28 +101,27 @@ public class Worldtree {
         min=smallestLeaf(n.right,min);
         return min;
     }
-
+    
     public void solve(){
         solve(root);
-        int L=smallestLeaf(root.left,size);
-        int R=smallestLeaf(root.right,size);
-        if(L>R || (root.left.value==0 && R<root.value) || (root.right.value==0 && L>root.value)) 
+        int L=smallestLeaf(root.left,size+1);
+        int R=smallestLeaf(root.right,size+1);
+        if((L>R && L!=(size+1)) || (L==(size+1) && R<root.value) || R ==(size+1) && L>root.value){
             swap(root);
+        }
     }
     private void solve(Node n){
         if(n.left!=null && n.value!=0){
             solve(n.left);
-            solve(n.right);
-            if(((n.left.value>n.right.value && n.right.value!=0) || 
+            if (((n.left.value>n.right.value && n.right.value!=0) || 
                ((n.right.value<n.value && n.left.value==0))) ||
                ((n.left.value>n.value && n.right.value==0))){
                 swap(n);
             }
+            solve(n.right);
         }   
     }
-    
     public static void main(String[] args){
-        
         try{
             File inputFile = new File(args[0]);
             Scanner userInput = new Scanner(inputFile);
