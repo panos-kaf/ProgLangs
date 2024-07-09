@@ -1,4 +1,6 @@
 import java.util.*;
+import java.io.File;
+import java.io.FileNotFoundException;
 
 class Node{
     int value;
@@ -120,15 +122,22 @@ public class Worldtree {
     }
     
     public static void main(String[] args){
-        Scanner userInput = new Scanner(System.in);
-        int N = userInput.nextInt();
-        Worldtree worldtree = new Worldtree(N);
-        for(int i=0;i<2*N+1;i++){
-            int n = userInput.nextInt();
-            worldtree.insert(n);
+        
+        try{
+            File inputFile = new File(args[0]);
+            Scanner userInput = new Scanner(inputFile);
+            int N = userInput.nextInt();
+            Worldtree worldtree = new Worldtree(N);
+            for(int i=0;i<2*N+1;i++){
+                int n = userInput.nextInt();
+                worldtree.insert(n);
+            }
+            userInput.close();
+            worldtree.solve();
+            worldtree.inorder();
         }
-        userInput.close();
-        worldtree.solve();
-        worldtree.inorder();
+        catch(FileNotFoundException e){
+            System.out.println("Could not read file");
+        }
     }
 }
