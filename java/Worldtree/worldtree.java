@@ -32,8 +32,9 @@ public class Worldtree {
     }
 
     private boolean isFull(Node n){
-        if(n.left!=null && n.right!=null)
-        return n.left.value==0 && n.right.value==0 || (isFull(n.left) && isFull(n.right));
+        if(n.left!=null && n.right!=null){
+            return n.left.value==0 && n.right.value==0 || (isFull(n.left) && isFull(n.right));
+        }
         else return false;
     }
 
