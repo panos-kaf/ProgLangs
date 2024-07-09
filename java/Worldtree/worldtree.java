@@ -1,14 +1,15 @@
 import java.util.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.nio.file.FileSystem;
 
 class Node{
     int value;
     Node left,right;
-    boolean swapped;
     Node(int val){
         this.value = val;
         this.left=null;
         this.right=null;
-        this.swapped=false;
     }
     public boolean leaf(){
         if (this.value==0) return false;
@@ -105,8 +106,6 @@ public class Worldtree {
         int L=smallestLeaf(root.left,size);
         int R=smallestLeaf(root.right,size);
         if(L>R) swap(root);
-        System.out.println("\nleft smallest = "+ L);        
-        System.out.println("right smallest = " + R);  
     }
     private void solve(Node n){
         if(n.left!=null && n.value!=0){
@@ -120,20 +119,23 @@ public class Worldtree {
         }   
     }
     
-    public static void main(String[] args) {
-        Scanner userInput = new Scanner(System.in);
-        int N = userInput.nextInt();
-        Worldtree worldtree = new Worldtree(N);
-        for(int i=0;i<N;){
-            int n = userInput.nextInt();
-            worldtree.insert(n);
-            if(n!=0) i++;
+    public static void main(String[] args){
+        try{
+            File inputFile = new File(args[0]);
+            Scanner userInput = new Scanner(inputFile);
+            int N = userInput.nextInt();
+            Worldtree worldtree = new Worldtree(N);
+            for(int i=0;i<N;){
+                int n = userInput.nextInt();
+                worldtree.insert(n);
+                if(n!=0) i++;
+            }
+            userInput.close();
+            worldtree.solve();
+            worldtree.inorder();
         }
-        userInput.close();
-        worldtree.inorder();
-        worldtree.solve();
-        System.out.println();
-        worldtree.inorder();
+        catch(FileNotFoundException e){
+            System.out.println("read error");
+        }
     }
-
 }
