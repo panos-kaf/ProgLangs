@@ -17,7 +17,6 @@ class Node{
     }
     public boolean leaf_for_insert(){
         if (this.value==0) return true;
-
         if ((this.left == null) || (this.right==null)) return false;
 
         return (this.left.value==0) && (this.right.value==0);
