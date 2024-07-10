@@ -13,6 +13,11 @@ class Node{
     }
 
     public boolean leaf(){
+        if ((this.left == null) || (this.right==null)) return true;
+        return false;
+    }
+    public boolean leaf_for_insert(){
+
         if (this.value==0) return true;
 
         if ((this.left == null) || (this.right==null)) return false;
@@ -33,12 +38,26 @@ public class Worldtree {
         this.root = null;
     }
 
+    public int min_Node(Node x, Node y){
+        if(x!=null && y!=null){
+        if(x.value<y.value) return x.value;
+        return y.value;
+        }
+        if(x==null) return y.value;
+        if(y==null) return x.value;
+        return -1;
+    }
+
+    public int min(int x,int y){
+        if(x<y) return x;
+        return y;
+    }
+
     private boolean isFull(Node n){
         if(n==null) return false;
-
-        if(n.leaf()) return true;
-
-        return isFull(n.left) && isFull(n.right);}
+        if(n.leaf_for_insert()) return true;
+        return isFull(n.left) && isFull(n.right);
+    }
 
     public void insert(int val){
         root = insert(root, val);
@@ -71,21 +90,29 @@ public class Worldtree {
 
     public void inorder(){
         inorder(this.root);
+        System.out.println();
     }
     private void inorder(Node r){
     if(r!=null){
         inorder(r.left);
-            if(r.value!=0){
-                System.out.print(r.value + " ");
-            }
+        System.out.print(r.value + " ");
         inorder(r.right);
         }
     }   
 
-    public void swap(Node n){
+    public int swap(Node n){
         Node temp = n.right;
         n.right = n.left;
         n.left = temp;
+
+        int res=n.value;
+        if (n.right!=null){
+            res = min(n.right.value,n.value);
+        }
+        if (n.left!=null){
+            res = min(n.left.value,res);
+        }
+        return res;
     }
 
     private int smallestLeaf(Node n,int min){
@@ -102,67 +129,91 @@ public class Worldtree {
         return min;
     }
 
+    public void clean_up(){
+        root = clean_up(root);
+    }
+    private Node clean_up(Node n){
+        if(n == null) return null;
+
+        n.left=clean_up(n.left);
+        n.right=clean_up(n.right);
+        if (n.value==0) return null; 
+
+        return n;
+    }
+
+    public void TreePrint(){
+        BTreePrinter.printNode(root);
+    }
+
     public void solve(){
-        int L=smallestLeaf(root.left,size+1);
-        int R=smallestLeaf(root.right,size+1);
-        solve(root,size+1);
-
-        inorder();
-        System.out.println();
-
-        if((L>R && L!=(size+1)) || (L==(size+1) && R<root.value) || R ==(size+1) && L>root.value){
-            swap(root);
-        }
-        System.out.println("Left = "+L);
-        System.out.println("Right = "+R);
-        System.out.println("Size = "+size);
-        System.out.println("Root = "+root.value);
+        solve(root,Integer.MAX_VALUE);
     }
-    private int old_solve(Node n,int minL,int minR){
-        if(n.value!=0){
-            minL = old_solve(n.left,minL,minR);            
-            minR = old_solve(n.right,minL,minR);
-            if ((n.left.value>n.right.value && n.right.value!=0)){
-                swap(n);
-                return minL;
-            }
-            if ((minL<n.value && n.left.value==0)) {
-                swap(n);
-                return n.left.value;
-            }
-            if ((minL>n.value && n.right.value==0)){
-                swap(n);
-                return n.left.value;
-            }
-        }
-        return minL;   
-    }
+    private int old_solve(Node n,int min){
 
-    private int solve(Node n,int min){
-        int minL=size+1; //maybe minL=minR=min; ?
-        int minR=size+1;
+        int minLeft = Integer.MAX_VALUE; //maybe minL=minR=min; ?
+        int minRight = Integer.MAX_VALUE;
 
-        if(n.leaf()) return min;
+        if(n==null) return min;
+        if(n.leaf()) return min(min,n.value);
 
-        minL = solve(n.left,minL);
-        minR = solve(n.right,minR);
+        minRight = old_solve(n.right,minRight);
+        minLeft = old_solve(n.left,minLeft);
 
-        if((n.left.value>n.right.value) && n.right.value!=0){
+        if((min(n.left.value,minLeft)>min(n.right.value,minRight)) && n.right!=null){
             swap(n);
-            return n.left.value;
+            return min(n.left.value,minRight);
         }
-        if((n.left.value>n.value) && minR==(size+1)){
+        else if((min(n.left.value,minLeft)>n.value) && minRight==(Integer.MAX_VALUE)){
             swap(n);
             return n.value;
         }
-        if((n.right.value<n.value) && minL==(size+1)){
+        else if((min(n.right.value,minRight)<n.value) && minLeft==(Integer.MAX_VALUE)){
             swap(n);
-            return n.right.value;
+            return min(n.left.value,minRight);
         }
         return min;
     }
 
+    private int solve(Node n,int min){
 
+        int minRight = Integer.MAX_VALUE;
+        int minLeft = Integer.MAX_VALUE;
+
+        if (n == null) return min;
+        if (n.leaf()) return n.value;
+       
+        minRight = solve(n.right,minRight);
+        minLeft = solve(n.left,minLeft);
+
+        if (n.left != null && n.right != null){
+            minRight = min(minRight, n.right.value);
+            minLeft = min(minLeft, n.left.value);
+            if(minRight<minLeft){
+                swap(n);
+            }
+            return minLeft;
+        }
+
+        if (n.right != null && n.left == null){
+            minRight = min(minRight, n.right.value);
+            if(minRight<n.value){
+                swap(n);
+                return minRight;
+            }
+            return n.value;
+        }
+
+        if (n.left != null && n.right == null){
+            minLeft = min(minLeft, n.left.value);
+            if(n.value<minLeft){
+                swap(n);
+                return n.value;
+            }
+            return minLeft;
+        }
+        return min;
+    }
 
     public static void main(String[] args){
         try{
@@ -175,8 +226,17 @@ public class Worldtree {
                 worldtree.insert(n);
             }
             userInput.close();
-            BTreePrinter.printNode(worldtree.root);
+
+            worldtree.clean_up();
+
+            worldtree.TreePrint();
+            System.out.print("Initial: ");
+            worldtree.inorder();
+
             worldtree.solve();
+
+            worldtree.TreePrint();
+            System.out.print("Solution: ");
             worldtree.inorder();
         }
         catch(FileNotFoundException e){
