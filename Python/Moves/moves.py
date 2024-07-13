@@ -84,6 +84,6 @@ if path == None:
     print("IMPOSSIBLE")
 else:
     print('[',end='')
-    for direction in path[:-1]:
+    for direction in path[:0:-1]:
         print(direction,', ',sep='',end='')
-    print(path[-1],']',sep='')
+    print(path[0],']',sep='')
