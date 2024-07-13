@@ -6,11 +6,13 @@ def findBest(best, p, t):
         best = current
     return best
 
-f = open(sys.argv[1])
-n = int(f.readline())
+n = 0
 seq = []
-for num in f.readline().split():
-    seq.append(int(num))
+
+with open(sys.argv[1]) as f:
+    n = int(f.readline())
+    for num in f.readline().split():
+        seq.append(int(num))
 
 total = sum(seq)
 best = total
