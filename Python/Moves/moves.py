@@ -85,5 +85,5 @@ if path == None:
 else:
     print('[',end='')
     for direction in path[:0:-1]:
-        print(direction,', ',sep='',end='')
+        print(direction,',',sep='',end='')
     print(path[0],']',sep='')
