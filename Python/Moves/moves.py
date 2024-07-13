@@ -85,7 +85,10 @@ path = solve(n,grid)
 if path == None:
     print("IMPOSSIBLE")
 else:
-    print(path)
+    print('[',end='')
+    for direction in path[:-1]:
+        print(direction,', ',sep='',end='')
+    print(path[-1],']',sep='')
 
 
 
