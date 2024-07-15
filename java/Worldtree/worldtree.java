@@ -15,9 +15,7 @@ class Node{
 
         if ((this.left == null) || (this.right==null)) return false;
 
-        if ((this.left.value==0) && (this.right.value==0)) return true;
-
-        return false;
+        return ((this.left.value==0) && (this.right.value==0));
     }
 }
 
@@ -80,7 +78,7 @@ public class Worldtree {
         }
     }   
 
-    public void swap(Node n){
+    private void swap(Node n){
         Node temp = n.right;
         n.right = n.left;
         n.left = temp;
